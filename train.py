@@ -1,17 +1,15 @@
-from components import get_ppo_ac_cfg_defaults, get_episodes_count, get_ac_cfg_defaults
+from components import get_ppo_ac_cfg_defaults, get_episodes_count
 import time
 import numpy as np
 import agent
 from matplotlib import pyplot as plt
 
 
-env_path = './Reacher_Env/multiple_agents/Reacher_Linux/Reacher.x86_64'
+env_path = './Unity_Env/Reacher_Linux/Reacher.x86_64'
 # The agent type  ['A2CAgent', 'PPOACAgent']
-AGENT_NAME = 'A2CAgent'
+AGENT_NAME = 'PPOACAgent'
 if AGENT_NAME == 'PPOACAgent':
     hyper_parameter = get_ppo_ac_cfg_defaults().HYPER_PARAMETER.clone()
-elif AGENT_NAME == 'A2CAgent':
-    hyper_parameter = get_ac_cfg_defaults().HYPER_PARAMETER.clone()
 else:
     raise ValueError('This agent does not support at present!')
 
