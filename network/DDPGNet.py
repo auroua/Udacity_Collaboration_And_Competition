@@ -45,10 +45,11 @@ class DDPGNet(nn.Module):
         self.actor_params = list(self.actor_body.parameters()) + list(self.fc_actor.parameters())
         self.critic_params = list(self.critic_body.parameters()) + list(self.fc_critic.parameters())
         self.total_params = self.actor_params + self.critic_params
-        self.total_params.append(self.std)
 
-        self.actor_opt = actor_opt_fn(self.network.actor_params)
-        self.critic_opt = critic_opt_fn(self.network.critic_params)
+        if actor_opt_fn is not None:
+            self.actor_opt = actor_opt_fn(self.actor_params)
+        if critic_opt_fn is not None:
+            self.critic_opt = critic_opt_fn(self.critic_params)
 
     def forward(self, x, action=None):
         actor_out = F.tanh(self.fc_actor(self.actor_body(x)))
