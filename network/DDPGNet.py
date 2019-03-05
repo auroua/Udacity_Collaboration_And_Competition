@@ -52,7 +52,7 @@ class DDPGNet(nn.Module):
             self.critic_opt = critic_opt_fn(self.critic_params)
 
     def forward(self, x, action=None):
-        actor_out = F.tanh(self.fc_actor(self.actor_body(x)))
+        actor_out = torch.tanh(self.fc_actor(self.actor_body(x)))
         return actor_out
 
     def critic(self, x, a):

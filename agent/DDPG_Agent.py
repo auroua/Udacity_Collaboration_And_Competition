@@ -33,11 +33,16 @@ class DDPGAgent:
     def step(self):
         if self.state is None:
             self.random_process.reset_states()
-            self.state = self.task.reset()
-        action = self.policy_net(self.state)
+            self.state = self.task.reset().vector_observations
+        x_input = tensor(self.state).to(device)
+        action = self.policy_net(x_input)
         action = to_np(action)
         action += self.random_process.sample()
         next_states, rewards, terminals = self.task.step(action)
+        # next_states = np.squeeze(next_states, 0)
+        # rewards = np.squeeze(rewards, 0)
+        # terminals = np.squeeze(terminals, 0)
+
         self.episode_reward += rewards[0]
         self.replay.feed([self.state, action, rewards, next_states, terminals.astype(np.uint8)])
         if terminals[0]:
@@ -75,7 +80,7 @@ class DDPGAgent:
             critic_loss.backward()
             self.policy_net.critic_opt.step()
 
-            action = self.policy_net.actor(states)
+            action = self.policy_net(states)
             policy_loss = -self.policy_net.critic(states.detach(), action).mean()
 
             self.policy_net.zero_grad()

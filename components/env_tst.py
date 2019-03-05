@@ -4,7 +4,7 @@ import numpy as np
 
 if __name__ == '__main__':
     env = UnityEnvironment(
-        file_name='../Reacher_Env/Tennis_Linux/Tennis.x86_64')
+        file_name='../Unity_Env/Tennis_Linux/Tennis.x86_64')
     # get the default brain
     brain_name = env.brain_names[0]
     brain = env.brains[brain_name]
