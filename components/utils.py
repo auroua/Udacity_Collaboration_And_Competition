@@ -106,6 +106,7 @@ class ConstantSchedule:
     def __call__(self, steps=1):
         return self.val
 
+
 class LinearSchedule:
     def __init__(self, start, end=None, steps=None):
         if end is None:
@@ -123,3 +124,18 @@ class LinearSchedule:
         val = self.current
         self.current = self.bound(self.current + self.inc * steps, self.end)
         return val
+
+
+def hard_update(target, source):
+    """
+    Copy network parameters from source to target
+    Inputs:
+        target (torch.nn.Module): Net to copy parameters to
+        source (torch.nn.Module): Net whose parameters to copy
+    """
+    for target_param, param in zip(target.parameters(), source.parameters()):
+        target_param.data.copy_(param.data)
+
+
+def transpose_list(mylist):
+    return list(map(list, zip(*mylist)))
