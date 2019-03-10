@@ -1,5 +1,5 @@
 from .PPOACNet import PPOACNet
 from .DDPGNet import DDPGNet
-from .DDPG import DDPGAgent
+from .MADDPG import MADDPGPolicy
 
-__all__ = (PPOACNet, DDPGNet, DDPGAgent)
+__all__ = (PPOACNet, DDPGNet, MADDPGPolicy)

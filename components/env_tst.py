@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print('The state for the first agent looks like:', states[0])
 
     for i in range(5):  # play game for 5 episodes
-        env_info = env.reset(train_mode=False)[brain_name]  # reset the environment
+        env_info = env.reset(train_mode=True)[brain_name]  # reset the environment
         states = env_info.vector_observations  # get the current state (for each agent)
         scores = np.zeros(num_agents)  # initialize the score (for each agent)
         while True:

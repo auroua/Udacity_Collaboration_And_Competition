@@ -184,10 +184,6 @@ class Task:
         if log_dir is not None:
             mkdir(log_dir)
         envs, brainname = make_env(env_path)
-        # if single_process:
-        #     Wrapper = DummyVecEnv
-        # else:
-        #     Wrapper = SubprocVecEnv
         self.env = DummyVecEnv(envs, brainname)
         self.name = name
         self.num_agents = num_agents

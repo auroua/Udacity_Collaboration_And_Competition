@@ -65,7 +65,7 @@ class DDPGAgent:
             next_states = next_states.to(device)
 
             a_next = self.target_net(next_states)
-            q_next = self.target_net.critic(next_states, a_next)
+            q_next = self.target_net.critic(next_states, a_next.deatch().numpy())
 
             q_next = hyper_parameter.GAMMA * q_next * (1 - terminals)
             q_next.add_(rewards)
@@ -76,7 +76,7 @@ class DDPGAgent:
             q = self.policy_net.critic(states, tensor(actions))
             critic_loss = (q - q_next).pow(2).mul(0.5).sum(-1).mean()
 
-            self.policy_net.zero_grad()
+            self.policy_net.critic_opt.zero_grad()
             critic_loss.backward()
             self.policy_net.critic_opt.step()
 
