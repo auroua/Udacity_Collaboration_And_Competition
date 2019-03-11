@@ -80,17 +80,10 @@ class MADDPGAgent:
 
             # agent critic loss
             critic_loss1 = self.mse_loss(q_y_agent1, q_current_agent1)
-
             # update agent1 critic network
             self.maddpg_agent[0].critic_optimizer.zero_grad()
             critic_loss1.backward()
             self.maddpg_agent[0].critic_optimizer.step()
-
-            # update agent2 critic network
-            critic_loss2 = self.mse_loss(q_y_agent2, q_current_agent2)
-            self.maddpg_agent[1].critic_optimizer.zero_grad()
-            critic_loss2.backward()
-            self.maddpg_agent[1].critic_optimizer.step()
 
             state1_tensor = tensor(states1)
             state2_tensor = tensor(states2)
@@ -103,12 +96,16 @@ class MADDPGAgent:
 
             actor_agent1_loss = -self.maddpg_agent[0].critic(agent1_input).mean()
             actor_agent2_loss = -self.maddpg_agent[1].critic(agent2_input).mean()
-
             # update agent1 actor network
             self.maddpg_agent[0].actor_optimizer.zero_grad()
             actor_agent1_loss.backward()
             self.maddpg_agent[0].actor_optimizer.step()
 
+            # update agent2 critic network
+            critic_loss2 = self.mse_loss(q_y_agent2, q_current_agent2)
+            self.maddpg_agent[1].critic_optimizer.zero_grad()
+            critic_loss2.backward()
+            self.maddpg_agent[1].critic_optimizer.step()
             # update agent2 actor network
             self.maddpg_agent[1].actor_optimizer.zero_grad()
             actor_agent2_loss.backward()
