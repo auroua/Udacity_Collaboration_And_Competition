@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as f
+import torch.nn.functional as F
 import numpy as np
 
 
@@ -11,15 +11,15 @@ def hidden_init(layer):
 
 
 class Network(nn.Module):
-    def __init__(self, input_dim, hidden_in_dim, hidden_out_dim, output_dim, actor=False):
+    def __init__(self, input_dim, hidden_in_dim, hidden_out_dim, output_dim, actor=False, seed=0):
         super(Network, self).__init__()
         """self.input_norm = nn.BatchNorm1d(input_dim)
         self.input_norm.weight.data.fill_(1)
         self.input_norm.bias.data.fill_(0)"""
+        self.seed = torch.manual_seed(seed)
         self.fc1 = nn.Linear(input_dim, hidden_in_dim)
         self.fc2 = nn.Linear(hidden_in_dim, hidden_out_dim)
         self.fc3 = nn.Linear(hidden_out_dim, output_dim)
-        self.nonlin = f.relu  #leaky_relu
         self.actor = actor
 
     def reset_parameters(self):
@@ -30,13 +30,13 @@ class Network(nn.Module):
     def forward(self, x):
         if self.actor:
             # return a vector of the force
-            h1 = self.nonlin(self.fc1(x))
-            h2 = self.nonlin(self.fc2(h1))
-            h3 = (self.fc3(h2))
+            h1 = F.relu(self.fc1(x))
+            h2 = F.relu(self.fc2(h1))
+            h3 = F.tanh(self.fc3(h2))
             return h3
         else:
             # critic network simply outputs a number
-            h1 = self.nonlin(self.fc1(x))
-            h2 = self.nonlin(self.fc2(h1))
-            h3 = (self.fc3(h2))
+            h1 = F.leaky_relu(self.fc1(x))
+            h2 = F.leaky_relu(self.fc2(h1))
+            h3 = F.leaky_relu(self.fc3(h2))
             return h3

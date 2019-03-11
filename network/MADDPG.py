@@ -2,18 +2,18 @@
 # see networkforall for details
 
 from .NetWork import Network
-from components import hard_update, OrnsteinUhlenbeckProcess, device, LinearSchedule
+from components import hard_update, device
 from torch.optim import Adam
 
 
 class MADDPGPolicy:
     def __init__(self, in_actor, hidden_in_actor, hidden_out_actor, out_actor, in_critic, hidden_in_critic,
-                 hidden_out_critic, lr_actor=1.0e-2, lr_critic=1.0e-2):
+                 hidden_out_critic, lr_actor=1.0e-4, lr_critic=1.0e-3, seed=0):
         super(MADDPGPolicy, self).__init__()
-        self.actor = Network(in_actor, hidden_in_actor, hidden_out_actor, out_actor, actor=True).to(device)
-        self.critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1).to(device)
-        self.target_actor = Network(in_actor, hidden_in_actor, hidden_out_actor, out_actor, actor=True).to(device)
-        self.target_critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1).to(device)
+        self.actor = Network(in_actor, hidden_in_actor, hidden_out_actor, out_actor, actor=True, seed=seed).to(device)
+        self.critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1, seed=seed).to(device)
+        self.target_actor = Network(in_actor, hidden_in_actor, hidden_out_actor, out_actor, actor=True, seed=seed).to(device)
+        self.target_critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1, seed=seed).to(device)
         # initialize targets same as original networks
         hard_update(self.target_actor, self.actor)
         hard_update(self.target_critic, self.critic)

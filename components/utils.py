@@ -139,3 +139,9 @@ def hard_update(target, source):
 
 def transpose_list(mylist):
     return list(map(list, zip(*mylist)))
+
+
+def soft_update(target, src, mix_val):
+    for target_param, param in zip(target.parameters(), src.parameters()):
+        target_param.detach_()
+        target_param.copy_(target_param * (1.0 - mix_val) + param * mix_val)
