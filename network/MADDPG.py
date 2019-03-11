@@ -3,7 +3,7 @@
 
 from .NetWork import Network
 from components import hard_update, device
-from torch.optim import Adam
+from torch.optim import Adam, SGD
 
 
 class MADDPGPolicy:
@@ -18,8 +18,11 @@ class MADDPGPolicy:
         hard_update(self.target_actor, self.actor)
         hard_update(self.target_critic, self.critic)
 
-        self.actor_optimizer = Adam(self.actor.parameters(), lr=lr_actor)
-        self.critic_optimizer = Adam(self.critic.parameters(), lr=lr_critic, weight_decay=1.e-5)
+        # self.actor_optimizer = Adam(self.actor.parameters(), lr=lr_actor)
+        # self.critic_optimizer = Adam(self.critic.parameters(), lr=lr_critic, weight_decay=1.e-5)
+
+        self.actor_optimizer = SGD(self.actor.parameters(), lr=lr_actor, momentum=0.9)
+        self.critic_optimizer = SGD(self.critic.parameters(), lr=lr_actor, momentum=0.9)
 
     def act(self, obs):
         obs = obs.to(device)
