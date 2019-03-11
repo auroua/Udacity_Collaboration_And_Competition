@@ -17,11 +17,11 @@ class MADDPGAgent:
     def __init__(self, env_path, writer):
         super(MADDPGAgent, self).__init__()
         # critic input = obs_full + actions = 24+2+2=28
-        self.maddpg_agent = [MADDPGPolicy(24, 128, 64, 2, 52, 256, 128, seed=123),
-                             MADDPGPolicy(24, 128, 64, 2, 52, 256, 128, seed=321)]
+        self.maddpg_agent = [MADDPGPolicy(24, 256, 128, 2, 52, 256, 128, seed=123),
+                             MADDPGPolicy(24, 256, 128, 2, 52, 256, 128, seed=321)]
         self.state = None
         self.task = Task('Tennis', 1, env_path)
-        self.random_process = OrnsteinUhlenbeckProcess(size=(hyper_parameter.ACTION_SPACE,), std=LinearSchedule(1000.0))
+        self.random_process = OrnsteinUhlenbeckProcess(size=(hyper_parameter.ACTION_SPACE,), std=LinearSchedule(10.0))
         self.episode_reward_agent1 = 0
         self.episode_reward_agent2 = 0
         self.episode_rewards = []
