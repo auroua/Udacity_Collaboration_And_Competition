@@ -20,13 +20,13 @@ _C.HYPER_PARAMETER.STATE_SPACE = 24
 # Model Save Interval
 _C.HYPER_PARAMETER.SAVE_INTERVAL = 1000
 # Max Iteration Stpes
-_C.HYPER_PARAMETER.MAX_STEPS = int(1000)
+_C.HYPER_PARAMETER.MAX_STEPS = int(100000)
 # Model log interval
 _C.HYPER_PARAMETER.LOG_INTERVAL = 100
 # Batch Size
-_C.HYPER_PARAMETER.BATCHSIZE = 256
+_C.HYPER_PARAMETER.BATCHSIZE = 512
 # Minimal Memory Size
-_C.HYPER_PARAMETER.min_memory_size = 1024
+_C.HYPER_PARAMETER.min_memory_size = 2048
 # Target NetWork Mix
 _C.HYPER_PARAMETER.target_network_mix = 1e-3
 # Replay Buffer Size
