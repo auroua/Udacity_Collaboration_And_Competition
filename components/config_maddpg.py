@@ -17,20 +17,14 @@ _C.HYPER_PARAMETER.AGENTS_NUM = 1
 _C.HYPER_PARAMETER.ACTION_SPACE = 2
 # Environment State Space Size
 _C.HYPER_PARAMETER.STATE_SPACE = 24
-# MAX Single Episodes length
-_C.HYPER_PARAMETER.TMAX = 10000
 # Model Save Interval
-_C.HYPER_PARAMETER.SAVE_INTERVAL = 2000
+_C.HYPER_PARAMETER.SAVE_INTERVAL = 1000
 # Max Iteration Stpes
-_C.HYPER_PARAMETER.MAX_STEPS = int(2e7)
+_C.HYPER_PARAMETER.MAX_STEPS = int(1000)
 # Model log interval
-_C.HYPER_PARAMETER.LOG_INTERVAL = 200
-# Suggort clip value
-_C.HYPER_PARAMETER.CLIP_VAL = 0.2
+_C.HYPER_PARAMETER.LOG_INTERVAL = 100
 # Batch Size
 _C.HYPER_PARAMETER.BATCHSIZE = 256
-# entropy weight
-_C.HYPER_PARAMETER.entropy_weight = 0.01
 # Minimal Memory Size
 _C.HYPER_PARAMETER.min_memory_size = 1024
 # Target NetWork Mix
@@ -55,10 +49,6 @@ _C.TRAIN_PARAMETER.MOMENTUM = 0.9
 _C.TRAIN_PARAMETER.OPTIMIZER = 'Adam'
 # Grad clip
 _C.TRAIN_PARAMETER.Gradient_Clip = 0.5
-# entropy weight
-_C.TRAIN_PARAMETER.entropy_weight = 0.01
-# value loss weight
-_C.TRAIN_PARAMETER.value_loss_weight = 1.0
 
 
 def get_maddpg_cfg_defaults():
