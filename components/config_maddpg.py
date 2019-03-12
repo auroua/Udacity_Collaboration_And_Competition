@@ -24,7 +24,7 @@ _C.HYPER_PARAMETER.MAX_STEPS = int(100000)
 # Model log interval
 _C.HYPER_PARAMETER.LOG_INTERVAL = 100
 # Batch Size
-_C.HYPER_PARAMETER.BATCHSIZE = 256
+_C.HYPER_PARAMETER.BATCHSIZE = 512
 # Minimal Memory Size
 _C.HYPER_PARAMETER.min_memory_size = 512
 # Target NetWork Mix
@@ -36,17 +36,9 @@ _C.HYPER_PARAMETER.UPDATE_FREQ = 2
 
 _C.MODEL_PARAMETER = CN()
 # Fully Connection Model Hidden Layer Parameter
+
 _C.MODEL_PARAMETER.H1 = 256
 _C.MODEL_PARAMETER.H2 = 128
-
-
-_C.TRAIN_PARAMETER = CN()
-# MOMENTUM
-_C.TRAIN_PARAMETER.MOMENTUM = 0.9
-# The Optimizer used for training (SGD, Adam, ADABOUND)
-_C.TRAIN_PARAMETER.OPTIMIZER = 'Adam'
-# Grad clip
-_C.TRAIN_PARAMETER.Gradient_Clip = 0.5
 
 
 def get_maddpg_cfg_defaults():

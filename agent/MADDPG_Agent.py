@@ -46,7 +46,16 @@ class MADDPGAgent:
             self.agent2.reset()
             env_info = self.task.reset()
             self.state = env_info.vector_observations
-        action = np.vstack(tuple([agent.act(tensor(self.state[idx::2, :])) for idx, agent in enumerate([self.agent1, self.agent2])]))
+        if self.total_steps < 1200:
+            action = np.vstack(tuple([agent.act(tensor(self.state[idx::2, :]))
+                                      for idx, agent in enumerate([self.agent1, self.agent2])]))
+        elif self.total_steps < 1200*1.75 and np.random.randint(1, 10) <= 5:
+            action = np.vstack(tuple([agent.act(tensor(self.state[idx::2, :]))
+                                      for idx, agent in enumerate([self.agent1, self.agent2])]))
+        else:
+            action = np.vstack(tuple(
+                [agent.act(tensor(self.state[idx::2, :]), add_noise=False)
+                 for idx, agent in enumerate([self.agent1, self.agent2])]))
         next_states, rewards, terminals = self.task.step(action)
         self.episode_reward_agent1 += rewards[0]
         self.episode_reward_agent2 += rewards[1]
