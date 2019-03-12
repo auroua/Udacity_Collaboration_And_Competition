@@ -26,18 +26,18 @@ _C.HYPER_PARAMETER.LOG_INTERVAL = 100
 # Batch Size
 _C.HYPER_PARAMETER.BATCHSIZE = 256
 # Minimal Memory Size
-_C.HYPER_PARAMETER.min_memory_size = 2048
+_C.HYPER_PARAMETER.min_memory_size = 4096
 # Target NetWork Mix
 _C.HYPER_PARAMETER.target_network_mix = 1e-3
 # Replay Buffer Size
-_C.HYPER_PARAMETER.REPLAY_BUFFER_SIZE = 5e5
+_C.HYPER_PARAMETER.REPLAY_BUFFER_SIZE = 5e6
 # update actor and critic frequencies
 _C.HYPER_PARAMETER.UPDATE_FREQ = 4
 
 _C.MODEL_PARAMETER = CN()
 # Fully Connection Model Hidden Layer Parameter
-_C.MODEL_PARAMETER.H1 = 400
-_C.MODEL_PARAMETER.H2 = 300
+_C.MODEL_PARAMETER.H1 = 128
+_C.MODEL_PARAMETER.H2 = 64
 
 
 _C.TRAIN_PARAMETER = CN()

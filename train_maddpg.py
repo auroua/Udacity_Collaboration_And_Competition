@@ -23,8 +23,6 @@ if __name__ == '__main__':
             agent.close()
             break
         agent.step()
-
-    # export scalar data to JSON for external processing
     writer.export_scalars_to_json("./all_scalars.json")
     writer.close()
 

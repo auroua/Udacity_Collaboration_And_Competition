@@ -14,7 +14,7 @@ hyper_parameter = get_maddpg_cfg_defaults().HYPER_PARAMETER.clone()
 
 class MADDPGPolicy:
     def __init__(self, in_actor, hidden_in_actor, hidden_out_actor, out_actor, in_critic, hidden_in_critic,
-                 hidden_out_critic, lr_actor=1.0e-4, lr_critic=1.0e-4, seed=0):
+                 hidden_out_critic, lr_actor=1e-4, lr_critic=1e-3, seed=0):
         super(MADDPGPolicy, self).__init__()
         random.seed(seed)
         self.actor = Network(in_actor, hidden_in_actor, hidden_out_actor, out_actor, actor=True, seed=seed).to(device)
@@ -23,7 +23,7 @@ class MADDPGPolicy:
         self.critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1, seed=seed).to(device)
         self.target_critic = Network(in_critic, hidden_in_critic, hidden_out_critic, 1, seed=seed).to(device)
 
-        self.random_process = OrnsteinUhlenbeckProcess(size=(hyper_parameter.ACTION_SPACE,), std=LinearSchedule(0.2))
+        self.random_process = OrnsteinUhlenbeckProcess(size=(hyper_parameter.ACTION_SPACE,), std=LinearSchedule(1.0))
 
         # initialize targets same as original networks
         hard_update(self.target_actor, self.actor)

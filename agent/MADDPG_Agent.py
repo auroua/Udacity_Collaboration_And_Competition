@@ -10,14 +10,17 @@ from collections import deque
 
 
 hyper_parameter = get_maddpg_cfg_defaults().HYPER_PARAMETER.clone()
+model_parameter = get_maddpg_cfg_defaults().MODEL_PARAMETER.clone()
 
 
 class MADDPGAgent:
     def __init__(self, env_path, writer):
         super(MADDPGAgent, self).__init__()
         # critic input = obs_full + actions = 24+2+2=28
-        self.agent1 = MADDPGPolicy(24, 256, 128, 2, 52, 256, 128, seed=123)
-        self.agent2 = MADDPGPolicy(24, 256, 128, 2, 52, 256, 128, seed=321)
+        self.agent1 = MADDPGPolicy(24, model_parameter.H1, model_parameter.H2, 2, 52, model_parameter.H1,
+                                   model_parameter.H2, seed=123)
+        self.agent2 = MADDPGPolicy(24, model_parameter.H1, model_parameter.H2, 2, 52, model_parameter.H1,
+                                   model_parameter.H2, seed=321)
         self.agents = [self.agent1, self.agent2]
         self.state = None
         self.task = Task('Tennis', 1, env_path)
@@ -108,12 +111,21 @@ class MADDPGAgent:
                 action_agent2 = opp_agent.actor(state2_tensor).detach()
                 agent1_input = torch.cat((state1_tensor, state2_tensor, action_agent1, action_agent2), 1)
                 actor_agent1_loss = -curr_agnet.critic(agent1_input).mean()
+
                 curr_agnet.actor_optimizer.zero_grad()
                 actor_agent1_loss.backward()
                 curr_agnet.actor_optimizer.step()
 
+                soft_update(curr_agnet.target_actor, curr_agnet.actor, hyper_parameter.target_network_mix)
+                soft_update(curr_agnet.target_critic, curr_agnet.critic, hyper_parameter.target_network_mix)
+
                 actor_total_loss.append(actor_agent1_loss)
                 critic_total_loss.append(critic_loss1)
+
+            # soft_update(self.agent1.target_actor, self.agent1.actor, hyper_parameter.target_network_mix)
+            # soft_update(self.agent1.target_critic, self.agent1.critic, hyper_parameter.target_network_mix)
+            # soft_update(self.agent2.target_actor, self.agent2.actor, hyper_parameter.target_network_mix)
+            # soft_update(self.agent2.target_critic, self.agent2.critic, hyper_parameter.target_network_mix)
 
             agent1_critic_loss = critic_total_loss[0].cpu().detach().item()
             agent2_critic_loss = critic_total_loss[1].cpu().detach().item()
