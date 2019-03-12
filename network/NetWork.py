@@ -20,7 +20,7 @@ class Network(nn.Module):
         self.fc1 = nn.Linear(input_dim, hidden_in_dim)
         self.fc2 = nn.Linear(hidden_in_dim, hidden_out_dim)
         self.fc3 = nn.Linear(hidden_out_dim, output_dim)
-        # self.bn1 = nn.BatchNorm1d(hidden_in_dim)
+        self.bn1 = nn.BatchNorm1d(hidden_in_dim)
         # self.bn2 = nn.BatchNorm1d(hidden_out_dim)
         self.actor = actor
         self.reset_parameters()
@@ -34,7 +34,7 @@ class Network(nn.Module):
         if self.actor:
             # return a vector of the force
             h1 = F.relu(self.fc1(x))
-            # h1 = self.bn1(h1)
+            h1 = self.bn1(h1)
             h2 = F.relu(self.fc2(h1))
             # h2 = self.bn2(h2)
             h3 = torch.tanh(self.fc3(h2))
@@ -42,7 +42,7 @@ class Network(nn.Module):
         else:
             # critic network simply outputs a number
             h1 = F.leaky_relu(self.fc1(x))
-            # h1 = self.bn1(h1)
+            h1 = self.bn1(h1)
             h2 = F.leaky_relu(self.fc2(h1))
             # h2 = self.bn2(h2)
             h3 = F.leaky_relu(self.fc3(h2))

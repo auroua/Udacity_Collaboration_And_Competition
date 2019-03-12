@@ -7,7 +7,6 @@ import torch
 from components import tensor, get_maddpg_cfg_defaults, Task, to_np, soft_update, ReplayBuffer
 import numpy as np
 from collections import deque
-import torch.nn.functional as F
 
 
 hyper_parameter = get_maddpg_cfg_defaults().HYPER_PARAMETER.clone()
@@ -35,7 +34,7 @@ class MADDPGAgent:
                                    buffer_size=hyper_parameter.REPLAY_BUFFER_SIZE,
                                    batch_size=hyper_parameter.BATCHSIZE,
                                    seed=112233)
-        # self.mse_loss = torch.nn.MSELoss()
+        self.mse_loss = torch.nn.MSELoss()
         self.writer = writer
         self.summary_step = 0
         self.flag = False
@@ -81,7 +80,7 @@ class MADDPGAgent:
                     self.total_steps, len(self.episode_score_window), none_zero, np.max(self.episode_score_window), avg))
                 if hyper_parameter.SAVE_INTERVAL and not self.total_steps % hyper_parameter.SAVE_INTERVAL \
                         and len(self.episode_rewards) and avg >= 0.5:
-                    self.save('saved_models/model-%s-%s.pth' % (self.__class__.__name__, str(len(self.episode_rewards) + 1)))
+                    self.save('saved_models/model-%s-%s.pth' % (self.__class__.__name__, str(self.total_steps)))
         else:
             self.state = next_states
 
@@ -109,7 +108,7 @@ class MADDPGAgent:
                     q_y_agent1 = tensor(rewards1) + hyper_parameter.GAMMA*q_next_agent1*(1 - tensor(dones1))
                 critic_input1 = np.hstack((states1, states2, actions1, actions2))
                 q_current_agent1 = curr_agnet.critic(tensor(critic_input1))
-                critic_loss1 = F.mse_loss(q_y_agent1, q_current_agent1)
+                critic_loss1 = self.mse_loss(q_y_agent1, q_current_agent1)
                 # update agent1 critic network
                 curr_agnet.critic_optimizer.zero_grad()
                 critic_loss1.backward()
@@ -131,12 +130,6 @@ class MADDPGAgent:
 
                 actor_total_loss.append(actor_agent1_loss)
                 critic_total_loss.append(critic_loss1)
-
-            # soft_update(self.agent1.target_actor, self.agent1.actor, hyper_parameter.target_network_mix)
-            # soft_update(self.agent1.target_critic, self.agent1.critic, hyper_parameter.target_network_mix)
-            # soft_update(self.agent2.target_actor, self.agent2.actor, hyper_parameter.target_network_mix)
-            # soft_update(self.agent2.target_critic, self.agent2.critic, hyper_parameter.target_network_mix)
-
             agent1_critic_loss = critic_total_loss[0].cpu().detach().item()
             agent2_critic_loss = critic_total_loss[1].cpu().detach().item()
             agent1_actor_loss = actor_total_loss[0].cpu().detach().item()

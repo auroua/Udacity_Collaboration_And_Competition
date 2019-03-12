@@ -13,13 +13,11 @@ hyper_parameter = get_maddpg_cfg_defaults().HYPER_PARAMETER.clone()
 if __name__ == '__main__':
     writer = SummaryWriter()
     agent = getattr(agent, AGENT_NAME)(env_path, writer)
-    agent1_reward = []
-    agent2_reward = []
-    total_mean_rewards = []
-    agent_name = agent.__class__.__name__
     t0 = time.time()
     while True:
         if hyper_parameter.MAX_STEPS and agent.total_steps >= hyper_parameter.MAX_STEPS:
+            agent.save('/home/aurora/workspaces_2019/Udacity_Collaboration_And_Competition/'
+                       'saved_models/maddpg_agent_final.pth')
             agent.close()
             break
         agent.step()
@@ -29,7 +27,7 @@ if __name__ == '__main__':
     # plot the scores
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plt.plot(np.arange(len(agent.episode_rewards)), agent.episode_rewards)
-    plt.ylabel('Mult-Agents Mean Score')
-    plt.xlabel('Finished Episode #')
+    plt.plot(np.arange(len(agent.avg_results)), agent.avg_results)
+    plt.ylabel('100 Episodes Mean Score')
+    plt.xlabel('Episodes')
     plt.show()
