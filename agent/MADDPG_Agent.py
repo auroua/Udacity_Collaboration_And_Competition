@@ -7,6 +7,7 @@ import torch
 from components import tensor, get_maddpg_cfg_defaults, Task, to_np, soft_update, ReplayBuffer
 import numpy as np
 from collections import deque
+import torch.nn.functional as F
 
 
 hyper_parameter = get_maddpg_cfg_defaults().HYPER_PARAMETER.clone()
@@ -34,7 +35,7 @@ class MADDPGAgent:
                                    buffer_size=hyper_parameter.REPLAY_BUFFER_SIZE,
                                    batch_size=hyper_parameter.BATCHSIZE,
                                    seed=112233)
-        self.mse_loss = torch.nn.MSELoss()
+        # self.mse_loss = torch.nn.MSELoss()
         self.writer = writer
         self.summary_step = 0
         self.flag = False
@@ -99,7 +100,7 @@ class MADDPGAgent:
                     q_y_agent1 = tensor(rewards1) + hyper_parameter.GAMMA*q_next_agent1*(1 - tensor(dones1))
                 critic_input1 = np.hstack((states1, states2, actions1, actions2))
                 q_current_agent1 = curr_agnet.critic(tensor(critic_input1))
-                critic_loss1 = self.mse_loss(q_y_agent1, q_current_agent1)
+                critic_loss1 = F.mse_loss(q_y_agent1, q_current_agent1)
                 # update agent1 critic network
                 curr_agnet.critic_optimizer.zero_grad()
                 critic_loss1.backward()
