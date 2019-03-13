@@ -1,12 +1,12 @@
 import numpy as np
 from pathlib import Path
 from unityagents import UnityEnvironment
-from .config_ppo_ac import get_ppo_ac_cfg_defaults
+from .config_maddpg import get_maddpg_cfg_defaults
 from abc import ABC, abstractmethod
 # adapted from https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/blob/master/envs.py
 
 
-hyper_parameter = get_ppo_ac_cfg_defaults().clone().HYPER_PARAMETER
+hyper_parameter = get_maddpg_cfg_defaults().clone().HYPER_PARAMETER
 
 
 def mkdir(path):

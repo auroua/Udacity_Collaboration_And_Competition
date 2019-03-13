@@ -76,10 +76,9 @@ class MADDPGAgent:
             if self.flag:
                 avg = np.mean(self.episode_score_window)
                 self.avg_results.append(avg)
-                print('episodes %d, returns %.2f/%.2f/%.2f/%.2f (num/nonzero/max/avg)' % (
-                    self.total_steps, len(self.episode_score_window), none_zero, np.max(self.episode_score_window), avg))
-                if hyper_parameter.SAVE_INTERVAL and not self.total_steps % hyper_parameter.SAVE_INTERVAL \
-                        and len(self.episode_rewards) and avg >= 0.5:
+                print('episodes %d, returns %.2f/%.2f/%.2f (nonzero/max/avg)' % (
+                    self.total_steps, none_zero, np.max(self.episode_score_window), avg))
+                if hyper_parameter.SAVE_INTERVAL and not self.total_steps % hyper_parameter.SAVE_INTERVAL and avg >= 0.5:
                     self.save('saved_models/model-%s-%s.pth' % (self.__class__.__name__, str(self.total_steps)))
         else:
             self.state = next_states
@@ -134,11 +133,12 @@ class MADDPGAgent:
             agent2_critic_loss = critic_total_loss[1].cpu().detach().item()
             agent1_actor_loss = actor_total_loss[0].cpu().detach().item()
             agent2_actor_loss = actor_total_loss[1].cpu().detach().item()
-            # add summary writer
-            self.writer.add_scalar('agent1/critic_loss', agent1_critic_loss, self.summary_step)
-            self.writer.add_scalar('agent2/critic_loss', agent2_critic_loss, self.summary_step)
-            self.writer.add_scalar('agent1/actor_loss', agent1_actor_loss, self.summary_step)
-            self.writer.add_scalar('agent2/actor_loss', agent2_actor_loss, self.summary_step)
+            if self.writer is not None:
+                # add summary writer
+                self.writer.add_scalar('agent1/critic_loss', agent1_critic_loss, self.summary_step)
+                self.writer.add_scalar('agent2/critic_loss', agent2_critic_loss, self.summary_step)
+                self.writer.add_scalar('agent1/actor_loss', agent1_actor_loss, self.summary_step)
+                self.writer.add_scalar('agent2/actor_loss', agent2_actor_loss, self.summary_step)
 
     def save(self, filename):
         torch.save({

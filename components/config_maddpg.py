@@ -5,10 +5,10 @@ _C = CN()
 
 
 _C.HYPER_PARAMETER = CN()
-# The EPSILON Value
-_C.HYPER_PARAMETER.EPSILON = 0.2
-# The beta parameter used to balance rewards and entropy
-_C.HYPER_PARAMETER.BETA = 0.01
+# # The EPSILON Value
+# _C.HYPER_PARAMETER.EPSILON = 0.2
+# # The beta parameter used to balance rewards and entropy
+# _C.HYPER_PARAMETER.BETA = 0.01
 # Discount Factor
 _C.HYPER_PARAMETER.GAMMA = 0.95
 # The Agent Number
